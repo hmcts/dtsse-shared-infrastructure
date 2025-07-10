@@ -4,7 +4,9 @@
 @Library("Infrastructure") _
 
 def product = 'dtsse'
+def branchesToSync = ['aat', 'prod']
 
 withInfraPipeline(product) {
+  syncBranchesWithMaster(branchesToSync)
   enableSlackNotifications('rse')
 }
