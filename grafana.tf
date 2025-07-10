@@ -5,6 +5,7 @@ resource "azurerm_dashboard_grafana" "dashboard-grafana" {
   resource_group_name               = azurerm_resource_group.rg.name
   location                          = "westeurope"
   deterministic_outbound_ip_enabled = true
+  grafana_major_version             = var.grafana_major_version
 
   identity {
     type = "SystemAssigned"
