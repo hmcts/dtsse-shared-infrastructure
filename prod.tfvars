@@ -1,3 +1,3 @@
-env = "prod"
-dashboard_count = 1
+env                   = "prod"
+dashboard_count       = 1
 grafana_major_version = 11
