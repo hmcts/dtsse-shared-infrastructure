@@ -1,4 +1,3 @@
-
 resource "azurerm_dashboard_grafana" "dashboard-grafana" {
   count                             = var.dashboard_count
   name                              = "${var.product}-grafana-${var.env}"
@@ -6,6 +5,7 @@ resource "azurerm_dashboard_grafana" "dashboard-grafana" {
   location                          = "westeurope"
   deterministic_outbound_ip_enabled = true
   grafana_major_version             = var.grafana_major_version
+  public_network_access_enabled     = var.public_network_access_enabled
 
   identity {
     type = "SystemAssigned"
@@ -23,6 +23,7 @@ resource "azurerm_dashboard_grafana" "dashboard-grafana10" {
   api_key_enabled                   = var.api_key_enabled
   zone_redundancy_enabled           = var.zone_redundancy_enabled
   deterministic_outbound_ip_enabled = true
+  public_network_access_enabled     = var.public_network_access_enabled
 
   identity {
     type = "SystemAssigned"

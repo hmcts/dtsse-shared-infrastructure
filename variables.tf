@@ -53,3 +53,15 @@ variable "budget_start_date" {
   description = "The start date for the budget in ISO 8601 format."
   type        = string
 }
+
+variable "public_network_access_enabled" {
+  default     = true
+  description = "Specifies whether public network access is enabled for the Grafana instance."
+  type        = bool
+}
+
+variable "pgsql_public_access" {
+  default     = true
+  description = "Specifies whether public access is enabled for the PostgreSQL Flexible Server."
+  type        = bool
+}
