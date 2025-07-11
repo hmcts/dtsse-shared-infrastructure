@@ -26,7 +26,7 @@ module "postgresql" {
   ]
 
   pgsql_version = "14"
-  public_access = true
+  public_access = var.pgsql_public_access
   pgsql_firewall_rules = [
     {
       name             = "grafana00"
