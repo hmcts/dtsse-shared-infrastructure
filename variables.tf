@@ -47,3 +47,9 @@ variable "zone_redundancy_enabled" {
   description = "Specifies whether enable the zone redundancy setting of the Grafana instance."
   type        = bool
 }
+
+variable "budget_start_date" {
+  default     = "2024-10-01T00:00:00Z"
+  description = "The start date for the budget in ISO 8601 format."
+  type        = string
+}

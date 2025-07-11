@@ -7,7 +7,7 @@ resource "azurerm_consumption_budget_resource_group" "grafana-budget-alert" {
   time_grain = "Monthly"
 
   time_period {
-    start_date = "2024-10-01T00:00:00Z"
+    start_date = var.budget_start_date
   }
 
   filter {
