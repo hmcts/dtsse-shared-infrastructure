@@ -165,7 +165,7 @@ resource "azurerm_role_assignment" "app_insights_dcd_cnp_aat_access" {
 resource "azurerm_role_assignment" "app_insights_dcd_cnp_aat_access-grafana9" {
   count                = var.dashboard_count
   scope                = "/subscriptions/1c4f0704-a29e-403d-b719-b90c34ef14c9"
-  role_definition_name  = "Reader"
+  role_definition_name = "Reader"
   principal_id         = azurerm_dashboard_grafana.dashboard-grafana[0].identity[0].principal_id
 }
 
