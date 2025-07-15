@@ -1,4 +1,3 @@
-
 locals {
   component    = "dashboard"
   outbound_ips = try(azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip, [])
@@ -27,7 +26,7 @@ module "postgresql" {
 
   pgsql_version = "14"
   public_access = var.pgsql_public_access
-  pgsql_firewall_rules = [
+  pgsql_firewall_rules = var.pgsql_public_access ? [
     {
       name             = "grafana00"
       start_ip_address = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[0]
@@ -48,7 +47,7 @@ module "postgresql" {
       start_ip_address = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[1]
       end_ip_address   = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[1]
     },
-  ]
+  ] : []
   admin_user_object_id = var.jenkins_AAD_objectId
 
   common_tags = var.common_tags

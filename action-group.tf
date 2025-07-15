@@ -4,7 +4,7 @@ data "azurerm_key_vault_secret" "alert-email" {
 }
 
 module "alert-action-group" {
-  source   = "git@github.com:hmcts/cnp-module-action-group"
+  source   = "git@github.com:hmcts/cnp-module-action-group?ref=master"
   location = "global"
   env      = var.env
 
