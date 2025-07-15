@@ -168,3 +168,15 @@ resource "azurerm_role_assignment" "app_insights_dcd_cnp_aat_access-grafana9" {
   role_definition_name = "Reader"
   principal_id         = azurerm_dashboard_grafana.dashboard-grafana[0].identity[0].principal_id
 }
+
+resource "azurerm_dashboard_grafana_managed_private_endpoint" "this" {
+  for_each = {
+    for resource in var.private_link_resource : resource.name => resource
+    if var.env == "prod"
+  }
+
+  name                     = "grafana-postgres-mpe"
+  location                 = var.location
+  grafana_id               = azurerm_dashboard_grafana.dashboard-grafana10[0].id
+  private_link_resource_id = azurerm_private_link_service.pls-service[each.value.name].id
+}
