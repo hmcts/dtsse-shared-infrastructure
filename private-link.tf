@@ -9,7 +9,7 @@ resource "azurerm_network_interface" "nic" {
   resource_group_name = module.postgresql[0].resource_group_name
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = data.azurerm_subnet.pls[0].id
+    subnet_id                     = azurerm_subnet.pls_subnet[0].id
     private_ip_address_allocation = "Dynamic"
   }
   tags = var.common_tags
@@ -17,6 +17,7 @@ resource "azurerm_network_interface" "nic" {
   depends_on = [
     module.postgresql
   ]
+
 }
 
 resource "azurerm_lb" "pls" {
@@ -32,7 +33,7 @@ resource "azurerm_lb" "pls" {
   frontend_ip_configuration {
     name                          = "${each.value.name}-lbfe-1"
     zones                         = ["1", "2", "3"]
-    subnet_id                     = data.azurerm_subnet.pls[0].id
+    subnet_id                     = azurerm_subnet.pls_subnet[0].id
     private_ip_address_allocation = "Dynamic"
   }
   tags = var.common_tags
@@ -74,16 +75,16 @@ resource "azurerm_private_link_service" "pls-service" {
   load_balancer_frontend_ip_configuration_ids = [
     azurerm_lb.pls[each.value.name].frontend_ip_configuration.0.id
   ]
-  location                    = var.location
-  name                        = "${each.value.name}-lb-pvt-link-service"
-  resource_group_name         = module.postgresql[0].resource_group_name
-  visibility_subscription_ids = ["*"]
+  location            = var.location
+  name                = "${each.value.name}-lb-pvt-link-service"
+  resource_group_name = module.postgresql[0].resource_group_name
   nat_ip_configuration {
     name      = "${each.value.name}-1"
     primary   = true
-    subnet_id = data.azurerm_subnet.pls[0].id
+    subnet_id = azurerm_subnet.pls_subnet[0].id
   }
   tags = var.common_tags
+
   depends_on = [
     module.postgresql
   ]

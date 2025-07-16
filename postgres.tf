@@ -24,8 +24,10 @@ module "postgresql" {
     }
   ]
 
-  pgsql_version = "14"
-  public_access = var.pgsql_public_access
+  pgsql_version             = "14"
+  public_access             = var.pgsql_public_access
+  pgsql_delegated_subnet_id = !var.pgsql_public_access ? azurerm_subnet.db_subnet[0].id : ""
+
   pgsql_firewall_rules = var.pgsql_public_access ? [
     {
       name             = "grafana00"
