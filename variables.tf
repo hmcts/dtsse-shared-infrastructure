@@ -64,9 +64,3 @@ variable "pgsql_public_access" {
   description = "Specifies whether public access is enabled for the PostgreSQL Flexible Server."
   type        = bool
 }
-
-variable "private_link_resource" {
-  description = "Configuration for private link resources, used only in prod."
-  type        = any
-  default     = []
-}
