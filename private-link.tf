@@ -1,23 +1,11 @@
-resource "azurerm_network_interface" "nic" {
+resource "azurerm_lb_backend_address_pool_address" "pls" {
   for_each = {
     for resource in var.private_link_resource : resource.name => resource
     if var.env == "prod"
   }
-
-  name                = "${each.value.name}-${var.env}"
-  location            = var.location
-  resource_group_name = module.postgresql[0].resource_group_name
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.pls_subnet[0].id
-    private_ip_address_allocation = "Dynamic"
-  }
-  tags = var.common_tags
-
-  depends_on = [
-    module.postgresql
-  ]
-
+  name                    = "${each.value.name}-beap-address"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.pls[each.value.name].id
+  virtual_network_id      = azurerm_virtual_network.db_vnet[0].id
 }
 
 resource "azurerm_lb" "pls" {
@@ -36,7 +24,8 @@ resource "azurerm_lb" "pls" {
     subnet_id                     = azurerm_subnet.pls_subnet[0].id
     private_ip_address_allocation = "Dynamic"
   }
-  tags = var.common_tags
+
+  tags     = var.common_tags
 }
 
 resource "azurerm_lb_backend_address_pool" "pls" {
@@ -49,20 +38,6 @@ resource "azurerm_lb_backend_address_pool" "pls" {
   name            = "grafana-backend-pool"
   depends_on = [
     azurerm_lb.pls,
-  ]
-}
-
-resource "azurerm_network_interface_backend_address_pool_association" "pls" {
-  for_each = {
-    for resource in var.private_link_resource : resource.name => resource
-    if var.env == "prod"
-  }
-
-  backend_address_pool_id = azurerm_lb_backend_address_pool.pls[each.value.name].id
-  ip_configuration_name   = "internal"
-  network_interface_id    = azurerm_network_interface.nic[each.value.name].id
-  depends_on = [
-    azurerm_lb_backend_address_pool.pls
   ]
 }
 
@@ -86,7 +61,8 @@ resource "azurerm_private_link_service" "pls-service" {
   tags = var.common_tags
 
   depends_on = [
-    module.postgresql
+    module.postgresql,
+    azurerm_lb_backend_address_pool_address.pls,
   ]
 }
 
@@ -119,7 +95,7 @@ resource "azurerm_lb_probe" "pls" {
 
   loadbalancer_id     = azurerm_lb.pls[each.value.name].id
   name                = "grafana-health-probe"
-  port                = 443
+  port                = 5432
   protocol            = "Tcp"
   interval_in_seconds = 5
   number_of_probes    = 1

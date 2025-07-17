@@ -179,4 +179,5 @@ resource "azurerm_dashboard_grafana_managed_private_endpoint" "this" {
   location                 = var.location
   grafana_id               = azurerm_dashboard_grafana.dashboard-grafana10[0].id
   private_link_resource_id = azurerm_private_link_service.pls-service[each.value.name].id
+  tags                     = var.common_tags
 }

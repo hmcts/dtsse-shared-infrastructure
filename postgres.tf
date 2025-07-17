@@ -28,7 +28,7 @@ module "postgresql" {
   public_access             = var.pgsql_public_access
   pgsql_delegated_subnet_id = !var.pgsql_public_access ? azurerm_subnet.db_subnet[0].id : ""
 
-  pgsql_firewall_rules = var.pgsql_public_access ? [
+  pgsql_firewall_rules = var.pgsql_public_access && length(var.private_link_resource) == 0 ? [
     {
       name             = "grafana00"
       start_ip_address = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[0]
