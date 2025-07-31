@@ -1,6 +1,6 @@
 locals {
   component    = "dashboard"
-  outbound_ips = try(azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip, [])
+  outbound_ips = try(azurerm_dashboard_grafana.main_west[0].outbound_ip, [])
 }
 
 module "postgresql" {
@@ -29,23 +29,23 @@ module "postgresql" {
   pgsql_firewall_rules = var.pgsql_public_access ? [
     {
       name             = "grafana00"
-      start_ip_address = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[0]
-      end_ip_address   = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[0]
+      start_ip_address = azurerm_dashboard_grafana.main_west[0].outbound_ip[0]
+      end_ip_address   = azurerm_dashboard_grafana.main_west[0].outbound_ip[0]
     },
     {
       name             = "grafana01"
-      start_ip_address = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[1]
-      end_ip_address   = azurerm_dashboard_grafana.dashboard-grafana[0].outbound_ip[1]
+      start_ip_address = azurerm_dashboard_grafana.main_west[0].outbound_ip[1]
+      end_ip_address   = azurerm_dashboard_grafana.main_west[0].outbound_ip[1]
     },
     {
       name             = "grafana1000"
-      start_ip_address = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[0]
-      end_ip_address   = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[0]
+      start_ip_address = azurerm_dashboard_grafana.main[0].outbound_ip[0]
+      end_ip_address   = azurerm_dashboard_grafana.main[0].outbound_ip[0]
     },
     {
       name             = "grafana1001"
-      start_ip_address = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[1]
-      end_ip_address   = azurerm_dashboard_grafana.dashboard-grafana10[0].outbound_ip[1]
+      start_ip_address = azurerm_dashboard_grafana.main[0].outbound_ip[1]
+      end_ip_address   = azurerm_dashboard_grafana.main[0].outbound_ip[1]
     },
   ] : []
   admin_user_object_id = var.jenkins_AAD_objectId
@@ -53,8 +53,8 @@ module "postgresql" {
   common_tags = var.common_tags
 
   depends_on = [
-    azurerm_dashboard_grafana.dashboard-grafana,
-    azurerm_dashboard_grafana.dashboard-grafana10
+    azurerm_dashboard_grafana.main_west,
+    azurerm_dashboard_grafana.main
   ]
 }
 
