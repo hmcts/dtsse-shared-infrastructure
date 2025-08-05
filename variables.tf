@@ -29,6 +29,11 @@ variable "dashboard_count" {
   type    = number
 }
 
+variable "dashboard_name" {
+  description = "The name of the Grafana dashboard."
+  type        = string
+}
+
 variable "grafana_major_version" {
   default     = 10
   description = "Specifies the major version of Grafana to deploy 10"
