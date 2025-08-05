@@ -14,7 +14,7 @@ resource "azurerm_consumption_budget_resource_group" "grafana-budget-alert" {
     dimension {
       name = "ResourceId"
       values = [
-        azurerm_dashboard_grafana.dashboard-grafana10[0].id,
+        azurerm_dashboard_grafana.main[0].id,
       ]
     }
   }
