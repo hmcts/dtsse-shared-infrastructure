@@ -5,7 +5,7 @@ moved {
 
 resource "azurerm_dashboard_grafana" "main" {
   count                             = var.dashboard_count
-  name                              = "${var.product}-grafana10-${var.env}"
+  name                              = "${var.product}-grafana-${var.env}"
   resource_group_name               = azurerm_resource_group.rg.name
   location                          = var.location
   grafana_major_version             = var.grafana_major_version
