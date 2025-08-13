@@ -66,7 +66,7 @@ data "azurerm_virtual_network" "core" {
 }
 
 data "azurerm_subnet" "postgres" {
-  name                 = "postgres"
+  name                 = "core-infra-subnet-0-aat"
   virtual_network_name = data.azurerm_virtual_network.core.name
   resource_group_name  = data.azurerm_virtual_network.core.resource_group_name
 }
