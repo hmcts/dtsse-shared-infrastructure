@@ -8,5 +8,6 @@ provider "azurerm" {
 
 provider "azurerm" {
   features {}
-  subscription_id = var.env == "prod" ? "8999dec3-0104-4a27-94ee-6588559729d1" : "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+  # subscription_id = var.env == "prod" ? "8999dec3-0104-4a27-94ee-6588559729d1" : "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+  subscription_id = "1c4f0704-a29e-403d-b719-b90c34ef14c9"
 }
