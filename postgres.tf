@@ -61,12 +61,12 @@ resource "azurerm_key_vault_secret" "DB-URL" {
 }
 
 data "azurerm_virtual_network" "core" {
-  name                = "core-infra-vnet-aat"
-  resource_group_name = "core-infra-aat"
+  name                = var.vnet_name
+  resource_group_name = var.vnet_resource_group
 }
 
 data "azurerm_subnet" "postgres" {
-  name                 = "core-infra-subnet-0-aat"
+  name                 = var.subnet_name
   virtual_network_name = data.azurerm_virtual_network.core.name
   resource_group_name  = data.azurerm_virtual_network.core.resource_group_name
 }
