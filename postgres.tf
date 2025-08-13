@@ -59,3 +59,22 @@ resource "azurerm_key_vault_secret" "DB-URL" {
   value        = "postgresql://${module.postgresql[0].username}:${module.postgresql[0].password}@${module.postgresql[0].fqdn}:5432/dashboard?sslmode=require"
   key_vault_id = module.key-vault.key_vault_id
 }
+
+data "azurerm_virtual_network" "core" {
+  name                = "core-infra-vnet-aat"
+  resource_group_name = "core-infra-aat"
+}
+
+data "azurerm_subnet" "postgres" {
+  name                 = "postgres"
+  virtual_network_name = data.azurerm_virtual_network.core.name
+  resource_group_name  = data.azurerm_virtual_network.core.resource_group_name
+}
+
+resource "azurerm_postgresql_flexible_server" "main" {
+  name                   = "dtsse-grafana-aat"
+  resource_group_name    = azurerm_resource_group.db.name
+  location               = var.location
+  delegated_subnet_id    = data.azurerm_subnet.postgres.id
+  private_dns_zone_id    = azurerm_private_dns_zone.postgres.id
+}
