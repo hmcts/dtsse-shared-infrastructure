@@ -70,11 +70,3 @@ data "azurerm_subnet" "postgres" {
   virtual_network_name = data.azurerm_virtual_network.core.name
   resource_group_name  = data.azurerm_virtual_network.core.resource_group_name
 }
-
-resource "azurerm_postgresql_flexible_server" "main" {
-  name                   = "dtsse-grafana-aat"
-  resource_group_name    = azurerm_resource_group.db.name
-  location               = var.location
-  delegated_subnet_id    = data.azurerm_subnet.postgres.id
-  private_dns_zone_id    = azurerm_private_dns_zone.postgres.id
-}
