@@ -5,7 +5,7 @@ locals {
 module "postgresql" {
   count = var.dashboard_count
 
-  pgsql_delegated_subnet_id = var.enable_vnet_integration && var.subnet_id != "" ? var.subnet_id : ""
+  pgsql_delegated_subnet_id = var.enable_vnet_integration ? var.subnet_id : null
 
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
