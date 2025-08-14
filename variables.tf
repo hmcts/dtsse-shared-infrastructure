@@ -84,3 +84,15 @@ variable "subnet_name" {
   description = "The name of the subnet for the PostgreSQL server"
   type        = string
 }
+
+variable "subnet_id" {
+  description = "The subnet ID for the PostgreSQL Flexible Server"
+  type        = string
+  default     = ""
+}
+
+variable "enable_vnet_integration" {
+  description = "Enable VNet integration for PostgreSQL (disables public access)"
+  type        = bool
+  default     = false
+}

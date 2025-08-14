@@ -6,3 +6,5 @@ budget_start_date     = "2024-10-01T00:00:00Z"
 vnet_name             = "core-infra-vnet-aat"
 vnet_resource_group   = "core-infra-aat"
 subnet_name           = "postgresql"
+subnet_id             = "/subscriptions/1c4f0704-a29e-403d-b719-b90c34ef14c9/resourceGroups/core-infra-aat/providers/Microsoft.Network/virtualNetworks/core-infra-vnet-aat/subnets/postgresql"
+enable_vnet_integration = true

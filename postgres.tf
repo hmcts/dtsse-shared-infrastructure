@@ -5,6 +5,8 @@ locals {
 module "postgresql" {
   count = var.dashboard_count
 
+  pgsql_delegated_subnet_id = var.enable_vnet_integration && var.subnet_id != "" ? var.subnet_id : ""
+
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
@@ -24,8 +26,8 @@ module "postgresql" {
   ]
 
   pgsql_version = "14"
-  public_access = var.pgsql_public_access
-  pgsql_firewall_rules = var.pgsql_public_access ? [
+  public_access = var.enable_vnet_integration ? false : var.pgsql_public_access
+  pgsql_firewall_rules = (var.enable_vnet_integration ? [] : (var.pgsql_public_access ? [
     {
       name             = "grafana1000"
       start_ip_address = azurerm_dashboard_grafana.main[0].outbound_ip[0]
@@ -36,7 +38,7 @@ module "postgresql" {
       start_ip_address = azurerm_dashboard_grafana.main[0].outbound_ip[1]
       end_ip_address   = azurerm_dashboard_grafana.main[0].outbound_ip[1]
     },
-  ] : []
+  ] : []))
   admin_user_object_id = var.jenkins_AAD_objectId
 
   common_tags = var.common_tags
