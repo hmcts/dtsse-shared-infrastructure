@@ -69,3 +69,33 @@ variable "pgsql_public_access" {
   description = "Specifies whether public access is enabled for the PostgreSQL Flexible Server."
   type        = bool
 }
+
+variable "vnet_name" {
+  description = "The name of the virtual network"
+  type        = string
+  default     = ""
+}
+
+variable "vnet_resource_group" {
+  description = "The name of the resource group containing the virtual network"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_name" {
+  description = "The name of the subnet for the PostgreSQL server"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_id" {
+  description = "The subnet ID for the PostgreSQL Flexible Server"
+  type        = string
+  default     = ""
+}
+
+variable "enable_vnet_integration" {
+  description = "Enable VNet integration for PostgreSQL (disables public access)"
+  type        = bool
+  default     = false
+}
