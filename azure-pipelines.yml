@@ -1,0 +1,47 @@
+# Azure DevOps pipeline for managing Grafana service account + token and exporting GRAFANA_AUTH
+# Placeholder pipeline (DTSPO-27093 continuation). Adjust service connection + variables as needed.
+
+trigger: none
+pr: none
+
+variables:
+  # Provide the Azure subscription service connection name
+  AZURE_SUBSCRIPTION: 'AzureServiceConnectionName'
+  GRAFANA_INSTANCE_NAME: 'dtsse-grafana-aat-f6avdaarczcqftge'
+  SERVICE_ACCOUNT_NAME: 'dtsse-grafana-tf-admin'
+  TOKEN_TTL: '90d'
+  OUTPUT_MODE: 'secretVariable'   # or 'keyvault'
+  # KEYVAULT_NAME: ''              # uncomment + set if using keyvault
+  # TOKEN_SECRET_NAME: 'GRAFANA_AUTH'
+
+stages:
+  - stage: ServiceAccountSetup
+    displayName: 'Grafana Service Account & Token'
+    jobs:
+      - job: manage
+        displayName: 'Ensure service account and token'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Run Grafana service account management script'
+            inputs:
+              azureSubscription: '$(AZURE_SUBSCRIPTION)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              addSpnToEnvironment: true  # Ensures service principal vars available
+              inlineScript: |
+                set -euo pipefail
+                echo "Running grafana service account management script"
+                chmod +x scripts/manage_grafana_service_account.sh
+                GRAFANA_INSTANCE_NAME="$(GRAFANA_INSTANCE_NAME)" \
+                SERVICE_ACCOUNT_NAME="$(SERVICE_ACCOUNT_NAME)" \
+                TOKEN_TTL="$(TOKEN_TTL)" \
+                OUTPUT_MODE="$(OUTPUT_MODE)" \
+                KEYVAULT_NAME="$(KEYVAULT_NAME)" \
+                TOKEN_SECRET_NAME="$(TOKEN_SECRET_NAME)" \
+                bash scripts/manage_grafana_service_account.sh
+                echo "Token variable should now be available as GRAFANA_AUTH (secret)."
+          - script: |
+              echo "Verifying GRAFANA_AUTH set (mask expected). Length: ${#GRAFANA_AUTH}" || true
+            displayName: 'Verify variable presence'
